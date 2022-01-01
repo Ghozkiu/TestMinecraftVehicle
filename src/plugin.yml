@@ -1,0 +1,3 @@
+main: minefected.vehicles.TestMinecraftVehicle
+version: 1.0.0
+name: TestMinecraftVehicle
