@@ -1,3 +1,7 @@
+name: TestMinecraftVehicle
+author: Ghozkiu, guillelego
 main: minefected.vehicles.TestMinecraftVehicle
 version: 1.0.0
-name: TestMinecraftVehicle
+description: just a vehicles test
+depend:
+  - ProtocolLib

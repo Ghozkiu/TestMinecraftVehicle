@@ -22,7 +22,7 @@ public class Vehicle {
         main.setCustomName(owner+"."+main);
 
         seats.get(0).setCustomName(owner+"."+0);
-        seats.get(0).setMetadata(owner+".0", new FixedMetadataValue(plugin, "yes!"));
+        seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
     }
 
     public void move(Player player){
