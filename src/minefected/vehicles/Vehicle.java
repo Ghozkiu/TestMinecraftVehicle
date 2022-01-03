@@ -29,7 +29,7 @@ public class Vehicle {
         seats.get(0).setSmall(true);
         seats.get(0).setMarker(true);
     }
-
+        //aaa
     public void move(Player player){
         main.teleport(main.getLocation().add(player.getVelocity()));
         seats.get(0).teleport(seats.get(0).getLocation().add(player.getVelocity()));

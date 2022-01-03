@@ -67,6 +67,7 @@ public class PlayerListener implements Listener {
 
                 if(packet.getFloat().read(1)>0){
                     System.out.println("W");
+                    //just a test using player direction, it kinda works.
                     Vector velocity = new Vector(1, 0, 0);
                     vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
                 }
