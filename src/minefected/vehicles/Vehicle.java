@@ -18,11 +18,16 @@ public class Vehicle {
         this.plugin = plugin;
         this.owner = player.getName();
         this.main = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+
         seats.add((ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(1,0,0),EntityType.ARMOR_STAND));
         main.setCustomName(owner+"."+main);
 
         seats.get(0).setCustomName(owner+"."+0);
         seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
+        main.setSmall(true);
+        main.setMarker(true);
+        seats.get(0).setSmall(true);
+        seats.get(0).setMarker(true);
     }
 
     public void move(Player player){

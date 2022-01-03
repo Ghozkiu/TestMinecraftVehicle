@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 
@@ -37,9 +38,7 @@ public class PlayerListener implements Listener {
     public void onInteract(PlayerInteractAtEntityEvent e){
         if(e.getRightClicked() instanceof ArmorStand){
             Entity clickedEntity = e.getRightClicked();
-            System.out.println("entro 1");
             if(clickedEntity.hasMetadata(e.getPlayer().getName())){
-                System.out.println("entro 2");
                 clickedEntity.addPassenger(e.getPlayer());
 
             }
@@ -60,25 +59,36 @@ public class PlayerListener implements Listener {
                 PacketContainer packet = event.getPacket();
                 Player player = event.getPlayer();
 
-                Entity b = player.getVehicle();
-                if (b instanceof Player) {
+                Entity vehicle = player.getVehicle();
+                if (vehicle == null || vehicle instanceof Player) {
                     return;
                 }
 
+
                 if(packet.getFloat().read(1)>0){
                     System.out.println("W");
+                    Vector velocity = new Vector(1, 0, 0);
+                    vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
                 }
                 if(packet.getFloat().read(1)<0){
                     System.out.println("S");
+                    Vector velocity = new Vector(-1, 0, 0);
+                    vehicle.setVelocity(vehicle.getVelocity().add(velocity));
                 }
                 if(packet.getFloat().read(0)>0){
                     System.out.println("A");
+                    Vector velocity = new Vector(0, 0, -1);
+                    vehicle.setVelocity(vehicle.getVelocity().add(velocity));
                 }
                 if(packet.getFloat().read(0)<0){
                     System.out.println("D");
+                    Vector velocity = new Vector(0, 0, 1);
+                    vehicle.setVelocity(vehicle.getVelocity().add(velocity));
                 }
                 if(packet.getBooleans().read(0)){
                     System.out.println("Space");
+                    Vector velocity = new Vector(0, 1, 0);
+                    vehicle.setVelocity(vehicle.getVelocity().add(velocity));
                 }
             }
         }), 0, 2000);
