@@ -26,6 +26,10 @@ public class TestMinecraftVehicle extends JavaPlugin {
         pm.registerEvents(new PlayerListener(this), this);
     }
 
+    public void registerCustomEntities(){
+//        NMSUtils.registerEntity("custom_vehicle", NMSUtils.MobType, CustomZombie.class, false);
+    }
+
     public void configRegister() {
         File config = new File(getDataFolder(), "config.yml");
         this.configPath = config.getPath();

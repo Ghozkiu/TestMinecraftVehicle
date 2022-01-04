@@ -1,8 +1,10 @@
 package minefected.vehicles;
 
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
@@ -25,8 +27,10 @@ public class Vehicle {
         seats.get(0).setCustomName(owner+"."+0);
         seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
         main.setSmall(true);
-        main.setMarker(true);
         seats.get(0).setSmall(true);
+        main.setHelmet(new ItemStack(Material.SAPLING));
+        main.setMarker(true);
+        seats.get(0).setHelmet(new ItemStack(Material.SAPLING));
         seats.get(0).setMarker(true);
     }
         //aaa
