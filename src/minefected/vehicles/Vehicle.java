@@ -1,5 +1,6 @@
 package minefected.vehicles;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -19,9 +20,12 @@ public class Vehicle {
     public Vehicle(Player player, TestMinecraftVehicle plugin){
         this.plugin = plugin;
         this.owner = player.getName();
-        this.main = (ArmorStand) player.getWorld().spawnEntity(player.getLocation(), EntityType.ARMOR_STAND);
+        //We create an independent location with default pitch and yaw set to 0
+        Location playerLocation = new Location(player.getWorld(),player.getLocation().getX(),player.getLocation().getY(),player.getLocation().getZ(),0,0);
+        this.main = (ArmorStand) player.getWorld().spawnEntity(playerLocation, EntityType.ARMOR_STAND);
 
-        seats.add((ArmorStand) player.getWorld().spawnEntity(player.getLocation().add(1,0,0),EntityType.ARMOR_STAND));
+
+        seats.add((ArmorStand) player.getWorld().spawnEntity(playerLocation.add(1,0,0),EntityType.ARMOR_STAND));
         main.setCustomName(owner+"."+main);
 
         seats.get(0).setCustomName(owner+"."+0);

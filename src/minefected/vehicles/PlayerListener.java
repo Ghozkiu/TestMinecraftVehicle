@@ -24,6 +24,7 @@ import java.util.HashMap;
 public class PlayerListener implements Listener {
     private final HashMap<String, Vehicle> vehicleMap = new HashMap<>();
     private final TestMinecraftVehicle plugin;
+    final double pi = Math.PI;
     public PlayerListener(TestMinecraftVehicle plugin){
         this.plugin = plugin;
     }
@@ -37,9 +38,10 @@ public class PlayerListener implements Listener {
     public void onInteract(PlayerInteractAtEntityEvent e){
         if(e.getRightClicked() instanceof ArmorStand){
             Entity clickedEntity = e.getRightClicked();
-            if(clickedEntity.hasMetadata(e.getPlayer().getName())){
-                clickedEntity.addPassenger(e.getPlayer());
-
+            if(clickedEntity instanceof ArmorStand){
+               ArmorStand armorstand = (ArmorStand) clickedEntity;
+               System.out.println("Euler Head: "+armorstand.getHeadPose().getY());
+               System.out.println("Euler Body: "+armorstand.getBodyPose().getY());
             }
         }
     }
@@ -50,8 +52,16 @@ public class PlayerListener implements Listener {
         Vehicle vehicle = new Vehicle(e.getPlayer(),this.plugin);
         vehicleMap.put(e.getPlayer().getName(),vehicle);
         vehicle.mount(e.getPlayer());
+        ArmorStand vehicle2 = (ArmorStand)e.getPlayer().getVehicle();
+        double inityaw = 0;
+        if(inityaw<0)
+            inityaw+=360;
+        System.out.println("Init yaw: "+inityaw);
 
+        vehicle2.setBodyPose(new EulerAngle(0,0,0));
+        vehicle2.setHeadPose(new EulerAngle(0,0,0));
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+        double finalInityaw = inityaw;
         Bukkit.getScheduler().runTaskTimer(plugin, () -> protocolManager.addPacketListener(new PacketAdapter(plugin, ListenerPriority.HIGHEST, PacketType.Play.Client.STEER_VEHICLE) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
@@ -59,8 +69,10 @@ public class PlayerListener implements Listener {
                 Player player = event.getPlayer();
                 float playerYaw = player.getLocation().getYaw();
 
-                ArmorStand vehicle = (ArmorStand) player.getVehicle();
 
+                ArmorStand vehicle = (ArmorStand) player.getVehicle();
+                if(playerYaw<0)
+                    playerYaw+=360;
 
                 if(packet.getFloat().read(1)>0){
                     System.out.println("W");
@@ -71,40 +83,47 @@ public class PlayerListener implements Listener {
 //                    }else{
 //                        velocity = new Vector(0, 0, -1);
 //                    }
+                    playerYaw= Math.abs(playerYaw);
+
+
+                    player.sendMessage("Yaw: "+playerYaw+" Reflection: "+(180-playerYaw));
                     System.out.println(playerYaw);
-                    vehicle.setHeadPose(new EulerAngle(0, getPlayerDirection(player) * 0.1, 0));
-                    vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
+                    System.out.println("Radian player direction "+getPlayerDirection(player));
+                    vehicle2.setHeadPose(new EulerAngle(0, (Math.toRadians(playerYaw+ finalInityaw)), 0));
+                    vehicle2.setBodyPose(new EulerAngle(0, (Math.toRadians(playerYaw+ finalInityaw)), 0));
+                    vehicle2.setVelocity(player.getLocation().getDirection().add(velocity));
 
                 }
                 if(packet.getFloat().read(1)<0){
                     System.out.println("S");
 
-                    System.out.println("old yaw = " + vehicle.getLocation().getYaw());
+                    System.out.println("old yaw = " + vehicle2.getLocation().getYaw());
 //                    Location loc = vehicle.getLocation();
 //                    loc.setYaw(player.getLocation().getYaw());
 //                    vehicle.teleport(loc);
-                    System.out.println("new yaw = " + vehicle.getLocation().getYaw());
+                    System.out.println("new yaw = " + vehicle2.getLocation().getYaw());
 
                     Vector velocity = new Vector(0, 0, -0.3);
-                    vehicle.setBodyPose(new EulerAngle(0, Math.toRadians(playerYaw), 0));
-                    vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
+                    vehicle2.setBodyPose(new EulerAngle(0, Math.toRadians(playerYaw), 0));
+
+                    vehicle2.setVelocity(player.getLocation().getDirection().add(velocity));
                 }
                 if(packet.getFloat().read(0)>0){
                     System.out.println("A");
                     Vector velocity = new Vector(-0.3, 0, 0);
-                    vehicle.getLocation().setYaw(player.getLocation().getYaw());
-                    vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
+                    vehicle2.getLocation().setYaw(player.getLocation().getYaw());
+                    vehicle2.setVelocity(player.getLocation().getDirection().add(velocity));
                 }
                 if(packet.getFloat().read(0)<0){
                     System.out.println("D");
                     Vector velocity = new Vector(0.3, 0, 0);
-                    vehicle.getLocation().setYaw(player.getLocation().getYaw());
-                    vehicle.setVelocity(player.getLocation().getDirection().add(velocity));
+                    vehicle2.getLocation().setYaw(player.getLocation().getYaw());
+                    vehicle2.setVelocity(player.getLocation().getDirection().add(velocity));
                 }
                 if(packet.getBooleans().read(0)){
                     System.out.println("Space");
                     Vector velocity = new Vector(0, 0.1, 0);
-                    vehicle.setVelocity(vehicle.getVelocity().add(velocity));
+                    vehicle2.setVelocity(vehicle.getVelocity().add(velocity));
                 }
             }
         }), 0, 2000);
@@ -161,6 +180,10 @@ public class PlayerListener implements Listener {
             default:
                 return 2*pi;
         }
+    }
+
+    public int transformCoordinates(int yaw){
+        return 0;
     }
 
 
