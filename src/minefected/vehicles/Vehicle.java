@@ -28,16 +28,17 @@ public class Vehicle {
         seats.add((ArmorStand) player.getWorld().spawnEntity(playerLocation.add(1,0,0),EntityType.ARMOR_STAND));
         main.setCustomName(owner+"."+main);
 
-        seats.get(0).setCustomName(owner+"."+0);
-        seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
-        main.setSmall(true);
-        seats.get(0).setSmall(true);
+        main.setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
         main.setHelmet(new ItemStack(Material.SAPLING));
-        main.setMarker(true);
+        seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
         seats.get(0).setHelmet(new ItemStack(Material.SAPLING));
-        seats.get(0).setMarker(true);
     }
-        //aaa
+
+    public ArmorStand getMain() {
+        return main;
+    }
+
+    //aaa
     public void move(Player player){
         main.teleport(main.getLocation().add(player.getVelocity()));
         seats.get(0).teleport(seats.get(0).getLocation().add(player.getVelocity()));
@@ -46,7 +47,6 @@ public class Vehicle {
 
     public void mount(Player player){
         seats.get(0).addPassenger(player);
-
     }
 
 }
