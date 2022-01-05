@@ -109,7 +109,48 @@ public class PlayerListener implements Listener {
         System.out.println("Hay movimiento");
     }
 
+    //Handles rotation of an armorStand relative to a player yaw
+    public void handleRotation(double playerYaw, double vehicleYaw, double reductor, ArmorStand vehicle){
+        if(playerYaw<0)
+            playerYaw +=360;
 
+        playerYaw = Math.toRadians(playerYaw);
+
+        double difference = Math.abs(vehicleYaw-playerYaw);
+
+        if(difference<=reductor)
+            reductor = difference;
+
+        playerYaw= Math.abs(playerYaw);
+
+        if(playerYaw > vehicleYaw){
+            System.out.println("Sumando");
+            if(difference<=pi){
+                vehicle.setHeadPose(new EulerAngle(0,vehicleYaw+reductor,0));
+                vehicle.setBodyPose(new EulerAngle(0,vehicleYaw+reductor,0));
+            } else {
+                if(vehicleYaw-reductor<0)
+                    vehicleYaw = 2*pi;
+
+                vehicle.setHeadPose(new EulerAngle(0,vehicleYaw-reductor,0));
+                vehicle.setBodyPose(new EulerAngle(0,vehicleYaw-reductor,0));
+            }
+
+        }
+
+        else {
+            if(difference<=pi){
+                vehicle.setHeadPose(new EulerAngle(0,vehicleYaw-reductor,0));
+                vehicle.setBodyPose(new EulerAngle(0,vehicleYaw-reductor,0));
+            } else {
+                if(vehicleYaw+reductor>2*pi)
+                    vehicleYaw = 0;
+
+                vehicle.setHeadPose(new EulerAngle(0,vehicleYaw+reductor,0));
+                vehicle.setBodyPose(new EulerAngle(0,vehicleYaw+reductor,0));
+            }
+        }
+    }
 
 }
 
