@@ -59,28 +59,28 @@ public class PlayerListener implements Listener {
             public void onPacketReceiving(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
                 Player player = event.getPlayer();
-                float playerYaw = player.getLocation().getYaw();
+                double playerYaw = player.getLocation().getYaw();
                 Vehicle vehicle = vehicleMap.get(player.getName());
                 ArmorStand vehicleBody = vehicle.getMain();
 
                // ArmorStand vehicle = (ArmorStand) player.getVehicle();
-                if(playerYaw<0)
-                    playerYaw+=360;
 
                 vehicleBody.setBodyPose(new EulerAngle(0,0,0));
                 vehicleBody.setHeadPose(new EulerAngle(0,0,0));
 
                 if(packet.getFloat().read(1)>0){
+                    double reductor = 0.07;
+                    
                     System.out.println("W");
                     //just a test using player direction, it kinda works.
                     Vector velocity = new Vector(0, 0, 0.3);
-                    playerYaw= Math.abs(playerYaw);
-
-
-                    player.sendMessage("Yaw: "+playerYaw+" Reflection: "+(180-playerYaw));
-                    System.out.println(playerYaw);
-                    vehicleBody.setHeadPose(new EulerAngle(0, (Math.toRadians(playerYaw)), 0));
-                    vehicleBody.setBodyPose(new EulerAngle(0, (Math.toRadians(playerYaw)), 0));
+                    
+                    double vehicleYaw = vehicleBody.getHeadPose().getY();
+                    
+                    handleRotation(playerYaw, vehicleYaw, reductor, vehicleBody);
+                    
+                    
+                    
                     vehicleBody.setVelocity(player.getLocation().getDirection().add(velocity));
 
                 }
