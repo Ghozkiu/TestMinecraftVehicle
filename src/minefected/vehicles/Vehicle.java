@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,6 @@ public class Vehicle {
         main.setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
         main.setHelmet(new ItemStack(Material.SAPLING));
         seats.get(0).setMetadata(owner, new FixedMetadataValue(plugin, "MFVehicles"));
-        seats.get(0).setHelmet(new ItemStack(Material.SAPLING));
     }
 
     public ArmorStand getMain() {
@@ -40,13 +40,13 @@ public class Vehicle {
 
     //aaa
     public void move(Player player){
-        main.teleport(main.getLocation().add(player.getVelocity()));
-        seats.get(0).teleport(seats.get(0).getLocation().add(player.getVelocity()));
+        Vector velocity = new Vector(0, 0, 0.3);
+        Vector direction = player.getLocation().getDirection();
 
     }
 
     public void mount(Player player){
-        seats.get(0).addPassenger(player);
+        main.addPassenger(player);
     }
 
 }

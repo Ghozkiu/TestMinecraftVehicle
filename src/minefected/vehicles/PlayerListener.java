@@ -23,6 +23,7 @@ import java.util.HashMap;
 public class PlayerListener implements Listener {
     private final HashMap<String, Vehicle> vehicleMap = new HashMap<>();
     private final TestMinecraftVehicle plugin;
+    final double pi = Math.PI;
     public PlayerListener(TestMinecraftVehicle plugin){
         this.plugin = plugin;
     }
@@ -37,10 +38,10 @@ public class PlayerListener implements Listener {
         if(e.getRightClicked() instanceof ArmorStand){
             Entity clickedEntity = e.getRightClicked();
             if(clickedEntity instanceof ArmorStand){
-               ArmorStand armorstand = (ArmorStand) clickedEntity;
-               System.out.println("Euler Head: "+armorstand.getHeadPose().getY());
-               System.out.println("Euler Body: "+armorstand.getBodyPose().getY());
-               armorstand.addPassenger(e.getPlayer());
+                ArmorStand armorstand = (ArmorStand) clickedEntity;
+                System.out.println("Euler Head: "+armorstand.getHeadPose().getY());
+                System.out.println("Euler Body: "+armorstand.getBodyPose().getY());
+                armorstand.addPassenger(e.getPlayer());
             }
         }
     }
@@ -63,24 +64,22 @@ public class PlayerListener implements Listener {
                 Vehicle vehicle = vehicleMap.get(player.getName());
                 ArmorStand vehicleBody = vehicle.getMain();
 
-               // ArmorStand vehicle = (ArmorStand) player.getVehicle();
+                // ArmorStand vehicle = (ArmorStand) player.getVehicle();
 
-                vehicleBody.setBodyPose(new EulerAngle(0,0,0));
-                vehicleBody.setHeadPose(new EulerAngle(0,0,0));
 
                 if(packet.getFloat().read(1)>0){
-                    double reductor = 0.07;
-                    
+                    double reductor = 0.02;
+
                     System.out.println("W");
                     //just a test using player direction, it kinda works.
                     Vector velocity = new Vector(0, 0, 0.3);
-                    
+
                     double vehicleYaw = vehicleBody.getHeadPose().getY();
-                    
+
                     handleRotation(playerYaw, vehicleYaw, reductor, vehicleBody);
-                    
-                    
-                    
+
+
+
                     vehicleBody.setVelocity(player.getLocation().getDirection().add(velocity));
 
                 }
@@ -123,6 +122,8 @@ public class PlayerListener implements Listener {
 
         playerYaw= Math.abs(playerYaw);
 
+        System.out.println("PY: "+playerYaw+" VY: "+vehicleYaw);
+
         if(playerYaw > vehicleYaw){
             System.out.println("Sumando");
             if(difference<=pi){
@@ -153,5 +154,3 @@ public class PlayerListener implements Listener {
     }
 
 }
-
-
